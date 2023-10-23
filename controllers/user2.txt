@@ -1,0 +1,116 @@
+import mongoose from 'mongoose';
+
+const UserSchema = new mongoose.Schema({
+    firstName: {
+        type: String,
+        required: [true, 'Please add a first name']
+    },
+    lastName: {
+        type: String,
+        required: [true, 'Please add a last name']
+    },
+    email: {
+        type: String, 
+        required: [true, 'Please insert an email'],
+    },
+    role: {
+        type: String,
+        enum: ['doctor', 'client', 'pharma', 'admin'],
+        required: [true, 'Please select the role for the user']
+    },
+    password: {
+        type: String,
+        required: [true, 'Please enter a valid password']
+    },
+    specialization: {
+        type: String, // You can define the type as needed, e.g., an array of strings for multiple specializations
+        // You can add additional validation rules here if necessary
+    },
+    workingPlace: {
+        type: String,
+    },
+    workingHours: {
+        type: String,
+    },
+    charges: {
+        type: Number, // You can define the type as needed
+    },
+    about: {
+        type: String,
+    }
+});
+
+const User = mongoose.model("User", UserSchema);
+export default User;
+
+
+
+
+import User from "../model/user.model.js";
+
+export const getUsers = async (req, res) => {
+    try {
+        const users = await User.find();
+        return res.status(200).json(users);
+    } catch (error) {
+        res.status(400).json("Error: " + error);
+    }
+}
+
+export const getUserbyEmail = async (req, res) => {
+    try {
+        const { email } = req.params;
+        const user = await User.findOne({ email });
+        return res.status(200).json(user);
+
+    } catch (error) {
+        res.status(400).json('Error: ' + error);
+    }
+}
+
+export const signUpUser = async (req, res) => {
+    try {
+        const { firstName, lastName, email, role, password } = req.body;
+        
+        // Check if the user with the same email already exists
+        const ifUser = await User.findOne({ email });
+        if (ifUser) {
+            return res.status(200).json("User already exists. Please login to continue");
+        }
+
+        // Create a new user
+        const newUser = new User({
+            firstName,
+            lastName,
+            email,
+            role,
+            password,
+        });
+
+        // If the user is a doctor, add the additional fields
+        if (role === 'doctor') {
+            newUser.specialization = req.body.specialization;
+            newUser.workingPlace = req.body.workingPlace;
+            newUser.workingHours = req.body.workingHours;
+            newUser.charges = req.body.charges;
+            newUser.about = req.body.about;
+        }
+
+        await newUser.save();
+        return res.status(201).json(newUser);
+
+    } catch (error) {
+        res.status(400).json("Error: " + error);
+    }
+}
+
+export const signInUser = async (req, res) => {
+    try {
+        const { email, password } = req.body;
+        const user = await User.findOne({ email, password });
+        return res.status(200).json(user);
+
+    } catch (error) {
+        res.status(400).json("Error: " + error);
+    }
+}
