@@ -9,4 +9,5 @@ router.get('/client/:client',getPrescriptionByClient);
 router.get('/doctor/:doctor',getPrescriptionByDoctor)
 router.delete('/:id',deletePrescription);
 
+
 export default router;
