@@ -24,7 +24,7 @@ export const getUserbyEmail = async(req,res)=>{
 export const signUpUser = async(req,res)=>{
     try{
 
-        const {firstName, lastName, email, role, password} = req.body;
+        const {firebaseId,firstName, lastName, email, role, password} = req.body;
 
         
         const ifUser = await User.findOne({email});
@@ -32,7 +32,7 @@ export const signUpUser = async(req,res)=>{
             return res.status(200).json("User already exists. Please login to continue");
         }
 
-        const newUser = new User({firstName, lastName, email, role, password});
+        const newUser = new User({firebaseId,firstName, lastName, email, role, password});
         await newUser.save();
         return res.status(201).json(newUser);
 
