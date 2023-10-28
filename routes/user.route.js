@@ -1,10 +1,11 @@
 import express from 'express';
-import { getUsers, signInUser, signUpUser, getUserbyEmail } from '../controllers/user.controller.js';
+import { getUsers, signInUser, signUpUser, getUserbyEmail, getUserById } from '../controllers/user.controller.js';
 
 const router = express.Router();
 
-router.get('/:email',getUserbyEmail);
-router.get('/',getUsers);
+router.get('/',getUserbyEmail);
+router.get('/:id',getUserById);
+router.get('/all',getUsers);
 router.post('/signup',signUpUser);
 router.post('/signin',signInUser);
 
