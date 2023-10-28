@@ -1,10 +1,10 @@
 import mongoose from "mongoose";
-import {nanoid} from "nanoid";
+import { nanoid } from "nanoid";
 
 const PrescriptSchema = new mongoose.Schema({
     prescriptId: {
         type: String,
-        default: ()=> nanoid(8),
+        default: () => nanoid(8),
     },
     patient: {
         type: mongoose.Schema.Types.ObjectId,
@@ -14,19 +14,28 @@ const PrescriptSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: "User"
     },
+    remark: {
+        type: String,
+    },
     drugs: [{
-                drugName: {
-                    type: String,
+        drugName: {
+            type: String,
 
-                },
-                drugQty: {
-                    type: Number
-                },
-                drugDosage: {
-                    type: String
-                }
+        },
+        drugQty: {
+            type: Number
+        },
+        drugDosage: {
+            type: String
+        },
+        drugId: {
+            type: String
+        },
+        drugType: {
+            type: String
+        },
     }],
-},{
+}, {
     timestamps: true
 });
 
